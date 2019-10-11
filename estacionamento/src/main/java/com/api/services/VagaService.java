@@ -18,10 +18,26 @@ public class VagaService {
 
 	public Vaga find(Integer id) {
 		Optional<Vaga> vaga = vagaRepository.findById(id);
-		return vaga.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " + id + ", Tipo: " + Vaga.class.getName()));
+		return vaga.orElseThrow(() -> new ObjectNotFoundException(
+				"Vaga não encontrada! Id: " + id + ", Tipo: " + Vaga.class.getName()));
 	}
-	
-	public List<Vaga> findAll(){
+
+	public Vaga insert(Vaga vaga) {
+		vaga.setId(null);
+		vaga = vagaRepository.save(vaga);
+		return vaga;
+	}
+
+	public Vaga update(Vaga vaga) {
+		Vaga newVaga = find(vaga.getId());
+		return vagaRepository.save(newVaga);
+	}
+
+	public void delete(Integer id) {
+		vagaRepository.deleteById(id);
+	}
+
+	public List<Vaga> findAll() {
 		return vagaRepository.findAll();
 	}
 }

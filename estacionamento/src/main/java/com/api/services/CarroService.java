@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.api.dto.CarroDTO;
 import com.api.models.Carro;
 import com.api.repositories.CarroRepository;
 import com.api.services.exceptions.ObjectNotFoundException;
@@ -41,5 +42,9 @@ public class CarroService {
 
 	public List<Carro> findAll() {
 		return carroRepository.findAll();
+	}
+
+	public Carro fromDTO(CarroDTO carroDTO) {
+		return new Carro(carroDTO.getId(), carroDTO.getModelo(), carroDTO.getAno(), carroDTO.getCor());
 	}
 }
