@@ -1,19 +1,12 @@
 package com.api.models;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Estacionamento implements Serializable {
@@ -29,27 +22,14 @@ public class Estacionamento implements Serializable {
 	@ManyToOne
 	private Vaga vaga;
 
-	@NotNull
-	@JsonFormat(pattern = "#,##0.00")
-	private BigDecimal precoHora;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@JsonFormat(pattern = "dd-mm-yyyy")
-	private Date horaEntrada;
-
-	@JsonFormat(pattern = "#,##0.00")
-	private BigDecimal totalPagar;
-
 	public Estacionamento() {
 
 	}
 
-	public Estacionamento(Integer id, BigDecimal precoHora, Date horaEntrada, BigDecimal totalPagar) {
+	public Estacionamento(Integer id) {
 		super();
 		this.id = id;
-		this.precoHora = precoHora;
-		this.horaEntrada = horaEntrada;
-		this.totalPagar = totalPagar;
+		
 	}
 
 	public Integer getId() {
@@ -74,30 +54,6 @@ public class Estacionamento implements Serializable {
 
 	public void setVaga(Vaga vaga) {
 		this.vaga = vaga;
-	}
-
-	public BigDecimal getPrecoHora() {
-		return precoHora;
-	}
-
-	public void setPrecoHora(BigDecimal precoHora) {
-		this.precoHora = precoHora;
-	}
-
-	public Date getHoraEntrada() {
-		return horaEntrada;
-	}
-
-	public void setHoraEntrada(Date horaEntrada) {
-		this.horaEntrada = horaEntrada;
-	}
-
-	public BigDecimal getTotalPagar() {
-		return totalPagar;
-	}
-
-	public void setTotalPagar(BigDecimal totalPagar) {
-		this.totalPagar = totalPagar;
 	}
 
 	@Override

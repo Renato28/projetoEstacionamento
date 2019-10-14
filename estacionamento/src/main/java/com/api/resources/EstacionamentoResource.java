@@ -1,6 +1,8 @@
 package com.api.resources;
 
+import java.math.BigDecimal;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,11 +14,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.api.dto.CarroDTO;
 import com.api.models.Carro;
+import com.api.models.Estacionamento;
 import com.api.models.Vaga;
 import com.api.repositories.VagaRepository;
 import com.api.services.CarroService;
@@ -44,6 +48,13 @@ public class EstacionamentoResource {
 	public ResponseEntity<List<CarroDTO>> findAll() {
 		List<Carro> lista = carroService.findAll();
 		List<CarroDTO> listDto = lista.stream().map(obj -> new CarroDTO(obj)).collect(Collectors.toList());
+		
+		for(Carro carro : carroService.findAll()) {
+			BigDecimal horas = carroService.calcularDiferenca(carro.getHoraEntrada(), new Date());
+			BigDecimal totalPagar = carroService.calcularPagamento(carro.getPrecoHora(), horas);
+			carro.setTotalPagar(totalPagar);
+		}
+		
 		return ResponseEntity.ok().body(listDto);
 	}
 
@@ -67,6 +78,12 @@ public class EstacionamentoResource {
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		carroService.delete(id);
 		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(value = "/estacionamento/relatorio/{id}")
+	@ResponseBody
+	public BigDecimal relatorio (@PathVariable("id") Carro carro){
+		return carro.getTotalPagar();
 	}
 
 }

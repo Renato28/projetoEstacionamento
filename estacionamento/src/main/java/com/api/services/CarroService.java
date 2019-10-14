@@ -1,8 +1,13 @@
 package com.api.services;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.joda.time.DateTime;
+import org.joda.time.Minutes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +50,23 @@ public class CarroService {
 	}
 
 	public Carro fromDTO(CarroDTO carroDTO) {
-		return new Carro(carroDTO.getId(), carroDTO.getModelo(), carroDTO.getAno(), carroDTO.getCor());
+		return new Carro(carroDTO.getId(), carroDTO.getModelo(), carroDTO.getAno(), carroDTO.getCor(),
+				carroDTO.getPrecoHora(), carroDTO.getHoraEntrada(), carroDTO.getTotalPagar());
+	}
+
+	public BigDecimal calcularDiferenca(Date horaEntrada, Date horaSaida) {
+
+		DateTime entrada = new DateTime(horaEntrada);
+		DateTime saida = new DateTime(horaSaida);
+
+		BigDecimal minutos = new BigDecimal(Minutes.minutesBetween(entrada, saida).getMinutes());
+		BigDecimal horas = minutos.divide(new BigDecimal("60"), 2, RoundingMode.HALF_UP);
+		return horas;
+	}
+
+	public BigDecimal calcularPagamento(BigDecimal precoHora, BigDecimal horas) {
+
+		BigDecimal totalPagar = precoHora.multiply(horas);
+		return totalPagar;
 	}
 }
